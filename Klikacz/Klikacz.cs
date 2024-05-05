@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.Reflection.Emit;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Collections;
+using System.Reflection.Metadata;
 
 
 namespace Klikacz
@@ -30,6 +33,7 @@ namespace Klikacz
             Thread mouseCoordinateLabelThread = new Thread(() => ContinuallyUpdateMouseCoordLabel());
             mouseCoordinateLabelThread.IsBackground = true;
             mouseCoordinateLabelThread.Start();
+            LoadConfig();
         }
         private void AutoClickOnNewThread()
         {
@@ -43,39 +47,50 @@ namespace Klikacz
         {
             int minWaitTime = int.Parse("2000");
             int maxWaitTime = int.Parse("3000");
-            int minClicks = int.Parse("1");
-            int maxClicks = int.Parse("3");
+            int loop = 0;
             int actualX = 0;
             int actualY = 0;
 
+            if (loopCountTB.Text.Length == 0)
+            {
+                loop = 1;
+            }
+            else
+            {
+                loop = int.Parse(loopCountTB.Text);
+            }
             while (this.run)
             {
+
                 isWorkingL.Invoke(new MethodInvoker(() => isWorkingL.Text = "On"));
                 Random rnd = new Random();
-                //int numbersToClickBeforeUpdatingPosition = rnd.Next(minClicks, maxClicks);
-                foreach (ListViewItem item in LVI)
+                for (int i = 1; i <= loop; i++)
                 {
-                    if (item.SubItems[3].Text == "-")
+                    isWorkingL.Invoke(new MethodInvoker(() => loopNumberLL.Text = i.ToString()));
+                    foreach (ListViewItem item in LVI)
                     {
-                        int timeBetweenClicks = rnd.Next(minWaitTime, maxWaitTime) + Int32.Parse(item.SubItems[2].Text);
-                        actualX = Cursor.Position.X;
-                        actualY = Cursor.Position.Y;
-                        DoMouseClick(Int32.Parse(item.SubItems[0].Text), Int32.Parse(item.SubItems[1].Text));
-                        System.Windows.Forms.Cursor.Position = new Point(actualX, actualY);
-                        Thread.Sleep(timeBetweenClicks);
-                    }
-                    else
-                    {
-                        char[] keys = item.SubItems[3].Text.ToCharArray();
-                        foreach (char key in keys)
+                        if (item.SubItems[3].Text == "-")
                         {
-                            isWorkingL.Invoke(new MethodInvoker(() => SendKeys.Send("{"+ key + "}")));
+                            int timeBetweenClicks = rnd.Next(minWaitTime, maxWaitTime) + Int32.Parse(item.SubItems[2].Text);
+                            actualX = Cursor.Position.X;
+                            actualY = Cursor.Position.Y;
+                            DoMouseClick(Int32.Parse(item.SubItems[0].Text), Int32.Parse(item.SubItems[1].Text));
+                            System.Windows.Forms.Cursor.Position = new Point(actualX, actualY);
+                            Thread.Sleep(timeBetweenClicks);
+                        }
+                        else
+                        {
+                            char[] keys = item.SubItems[3].Text.ToCharArray();
+                            foreach (char key in keys)
+                            {
+                                isWorkingL.Invoke(new MethodInvoker(() => SendKeys.Send("{" + key + "}")));
+                            }
                         }
                     }
                 }
                 this.run = false;
-                this.ActiveControl = null;
                 isWorkingL.Invoke(new MethodInvoker(() => isWorkingL.Text = "Off"));
+                isWorkingL.Invoke(new MethodInvoker(() => EnableSettingFields()));
             }
         }
         private void DoMouseClick(int x, int y)
@@ -196,6 +211,7 @@ namespace Klikacz
             //msCordAddLabel.Focus();
         }
         //-------------------Blokada wpisywania literek do pól
+#pragma warning disable CS8602
         private void msCordAddTB_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
@@ -204,12 +220,11 @@ namespace Klikacz
             }
 
             // Only allow one decimal point
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            if ((e.KeyChar == '.') && ((sender as System.Windows.Forms.TextBox).Text.IndexOf('.') > -1))
             {
                 e.Handled = true;
             }
         }
-
         private void xCordAddTB_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
@@ -218,7 +233,7 @@ namespace Klikacz
             }
 
             // Only allow one decimal point
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            if ((e.KeyChar == '.') && ((sender as System.Windows.Forms.TextBox).Text.IndexOf('.') > -1))
             {
                 e.Handled = true;
             }
@@ -232,12 +247,25 @@ namespace Klikacz
             }
 
             // Only allow one decimal point
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            if ((e.KeyChar == '.') && ((sender as System.Windows.Forms.TextBox).Text.IndexOf('.') > -1))
             {
                 e.Handled = true;
             }
         }
+        private void loopCountTB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            {
+                e.Handled = true; // Prevent non-numeric input
+            }
 
+            // Only allow one decimal point
+            if ((e.KeyChar == '.') && ((sender as System.Windows.Forms.TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+#pragma warning restore CS8602
         private void keyAddButton_Click(object sender, EventArgs e)
         {
             addKeys(keyTB.Text);
@@ -253,10 +281,71 @@ namespace Klikacz
             CoordsLV.Items.Add(lista);
             LVI.Add(lista);
         }
-
-        private void klikliklik_Click(object sender, EventArgs e)
+        private void deleteSelectedButton_Click(object sender, EventArgs e)
         {
-            SendKeys.Send("{0}");
+            foreach (ListViewItem eachItem in CoordsLV.SelectedItems)
+            {
+                CoordsLV.Items.Remove(eachItem);
+                LVI.Remove(eachItem);
+            }
+        }
+
+        private void SaveConfig()
+        {
+            string exePath = Application.ExecutablePath;
+            string fileName = "saved_config.txt";
+            string fullPath = Path.Combine(Path.GetDirectoryName(exePath)!, fileName);
+            using (StreamWriter writer = new StreamWriter(fullPath))
+            {
+                foreach (ListViewItem item in LVI)
+                {
+                    writer.WriteLine(item.SubItems[0].Text + ";" + item.SubItems[1].Text + ";"
+                        + item.SubItems[2].Text + ";" + item.SubItems[3].Text);
+                }
+            }
+        }
+        private void LoadConfig()
+        {
+            string exePath = Application.ExecutablePath;
+            string fileName = "saved_config.txt";
+            string fullPath = Path.Combine(Path.GetDirectoryName(exePath)!, fileName);
+            if (File.Exists(fullPath))
+            {
+                using (StreamReader reader = new StreamReader(fullPath))
+                {
+                    string line;
+                    int counter = 0;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        ListViewItem lista = new ListViewItem();
+                        string[] splitParams = line.Split(';');
+                        foreach (string param in splitParams)
+                        {
+                            if (counter == 0)
+                            {
+                                lista.Text = param;
+                            }
+                            else
+                            {
+                                lista.SubItems.Add(param);
+                            }
+                            counter++;
+                        }
+                        counter = 0;
+                        CoordsLV.Items.Add(lista);
+                        LVI.Add(lista);
+                    }
+                }
+            }
+        }
+        private void zapiszToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveConfig();
+        }
+
+        private void wczytajToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadConfig();
         }
     }
 }

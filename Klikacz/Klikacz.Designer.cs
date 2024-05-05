@@ -29,6 +29,7 @@ namespace Klikacz
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Klikacz));
             startB = new Button();
             endB = new Button();
             xPositionL = new Label();
@@ -47,8 +48,9 @@ namespace Klikacz
             yCordAddLabel = new Label();
             msCordAddLabel = new Label();
             CordAddButton = new Button();
-            groupBox1 = new GroupBox();
             isWorkingL = new Label();
+            loopNumberL = new Label();
+            loopNumberLL = new Label();
             richTextBox1 = new RichTextBox();
             CordClearButton = new Button();
             addCordGB = new GroupBox();
@@ -56,14 +58,21 @@ namespace Klikacz
             keyL = new Label();
             keyTB = new TextBox();
             keyAddButton = new Button();
-            groupBox1.SuspendLayout();
+            deleteSelectedButton = new Button();
+            loopCountTB = new TextBox();
+            loopCountL = new Label();
+            menuStrip1 = new MenuStrip();
+            zapiszToolStripMenuItem = new ToolStripMenuItem();
+            wczytajToolStripMenuItem = new ToolStripMenuItem();
+            legendL = new Label();
             addCordGB.SuspendLayout();
             addKeyGB.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // startB
             // 
-            startB.Location = new Point(12, 12);
+            startB.Location = new Point(12, 27);
             startB.Name = "startB";
             startB.Size = new Size(98, 23);
             startB.TabIndex = 0;
@@ -73,18 +82,18 @@ namespace Klikacz
             // 
             // endB
             // 
-            endB.Location = new Point(116, 12);
+            endB.Location = new Point(116, 27);
             endB.Name = "endB";
             endB.Size = new Size(105, 23);
             endB.TabIndex = 1;
-            endB.Text = "Zakończ";
+            endB.Text = "Zatrzymaj";
             endB.UseVisualStyleBackColor = true;
             endB.Click += endB_Click;
             // 
             // xPositionL
             // 
             xPositionL.AutoSize = true;
-            xPositionL.Location = new Point(333, -2);
+            xPositionL.Location = new Point(12, 323);
             xPositionL.Name = "xPositionL";
             xPositionL.Size = new Size(17, 15);
             xPositionL.TabIndex = 2;
@@ -93,7 +102,7 @@ namespace Klikacz
             // xPosition
             // 
             xPosition.AutoSize = true;
-            xPosition.Location = new Point(356, -2);
+            xPosition.Location = new Point(35, 323);
             xPosition.Name = "xPosition";
             xPosition.Size = new Size(12, 15);
             xPosition.TabIndex = 3;
@@ -102,7 +111,7 @@ namespace Klikacz
             // yPositionL
             // 
             yPositionL.AutoSize = true;
-            yPositionL.Location = new Point(392, -2);
+            yPositionL.Location = new Point(63, 323);
             yPositionL.Name = "yPositionL";
             yPositionL.Size = new Size(17, 15);
             yPositionL.TabIndex = 4;
@@ -111,7 +120,7 @@ namespace Klikacz
             // yPosition
             // 
             yPosition.AutoSize = true;
-            yPosition.Location = new Point(415, -2);
+            yPosition.Location = new Point(86, 323);
             yPosition.Name = "yPosition";
             yPosition.Size = new Size(12, 15);
             yPosition.TabIndex = 5;
@@ -120,9 +129,9 @@ namespace Klikacz
             // CoordsLV
             // 
             CoordsLV.Columns.AddRange(new ColumnHeader[] { xCord, yCord, ms, key });
-            CoordsLV.Location = new Point(227, 12);
+            CoordsLV.Location = new Point(227, 27);
             CoordsLV.Name = "CoordsLV";
-            CoordsLV.Size = new Size(245, 345);
+            CoordsLV.Size = new Size(245, 330);
             CoordsLV.TabIndex = 6;
             CoordsLV.UseCompatibleStateImageBehavior = false;
             CoordsLV.View = View.Details;
@@ -202,7 +211,7 @@ namespace Klikacz
             // 
             // CordAddButton
             // 
-            CordAddButton.Location = new Point(12, 176);
+            CordAddButton.Location = new Point(12, 206);
             CordAddButton.Name = "CordAddButton";
             CordAddButton.Size = new Size(98, 23);
             CordAddButton.TabIndex = 13;
@@ -210,43 +219,46 @@ namespace Klikacz
             CordAddButton.UseVisualStyleBackColor = true;
             CordAddButton.Click += CordAddButton_Click;
             // 
-            // groupBox1
-            // 
-            groupBox1.Controls.Add(isWorkingL);
-            groupBox1.Controls.Add(yPositionL);
-            groupBox1.Controls.Add(yPosition);
-            groupBox1.Controls.Add(xPositionL);
-            groupBox1.Controls.Add(xPosition);
-            groupBox1.Location = new Point(12, 363);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(460, 86);
-            groupBox1.TabIndex = 14;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Legenda:";
-            // 
             // isWorkingL
             // 
             isWorkingL.AutoSize = true;
-            isWorkingL.Location = new Point(436, -2);
+            isWorkingL.Location = new Point(448, 437);
             isWorkingL.Name = "isWorkingL";
             isWorkingL.Size = new Size(24, 15);
             isWorkingL.TabIndex = 16;
             isWorkingL.Text = "Off";
             // 
+            // loopNumberL
+            // 
+            loopNumberL.AutoSize = true;
+            loopNumberL.Location = new Point(117, 323);
+            loopNumberL.Name = "loopNumberL";
+            loopNumberL.Size = new Size(76, 15);
+            loopNumberL.TabIndex = 17;
+            loopNumberL.Text = "Numer pętli: ";
+            // 
+            // loopNumberLL
+            // 
+            loopNumberLL.AutoSize = true;
+            loopNumberLL.Location = new Point(199, 323);
+            loopNumberLL.Name = "loopNumberLL";
+            loopNumberLL.Size = new Size(13, 15);
+            loopNumberLL.TabIndex = 18;
+            loopNumberLL.Text = "0";
+            // 
             // richTextBox1
             // 
-            richTextBox1.Enabled = false;
-            richTextBox1.Location = new Point(12, 379);
+            richTextBox1.Location = new Point(12, 363);
             richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(460, 70);
+            richTextBox1.Size = new Size(460, 86);
             richTextBox1.TabIndex = 0;
-            richTextBox1.Text = "Można sterować klawiszami:\nZ - Dodanie pozycji\tX - Ustawienie cordów\nS - Start pętli\t\tA - Stop pętli (nie działa jak \n\t\t\tprogram działa w tle)";
+            richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
             // CordClearButton
             // 
-            CordClearButton.Location = new Point(12, 205);
+            CordClearButton.Location = new Point(117, 235);
             CordClearButton.Name = "CordClearButton";
-            CordClearButton.Size = new Size(209, 23);
+            CordClearButton.Size = new Size(104, 23);
             CordClearButton.TabIndex = 15;
             CordClearButton.Text = "Wyczyść listę";
             CordClearButton.UseVisualStyleBackColor = true;
@@ -260,9 +272,9 @@ namespace Klikacz
             addCordGB.Controls.Add(xCordAddLabel);
             addCordGB.Controls.Add(yCordAddLabel);
             addCordGB.Controls.Add(msCordAddLabel);
-            addCordGB.Location = new Point(12, 52);
+            addCordGB.Location = new Point(12, 85);
             addCordGB.Name = "addCordGB";
-            addCordGB.Size = new Size(98, 118);
+            addCordGB.Size = new Size(98, 115);
             addCordGB.TabIndex = 17;
             addCordGB.TabStop = false;
             addCordGB.Text = "Dodaj klik:";
@@ -271,7 +283,7 @@ namespace Klikacz
             // 
             addKeyGB.Controls.Add(keyL);
             addKeyGB.Controls.Add(keyTB);
-            addKeyGB.Location = new Point(116, 55);
+            addKeyGB.Location = new Point(116, 85);
             addKeyGB.Name = "addKeyGB";
             addKeyGB.Size = new Size(105, 115);
             addKeyGB.TabIndex = 18;
@@ -281,7 +293,7 @@ namespace Klikacz
             // keyL
             // 
             keyL.AutoSize = true;
-            keyL.Location = new Point(6, 22);
+            keyL.Location = new Point(6, 25);
             keyL.Name = "keyL";
             keyL.Size = new Size(68, 15);
             keyL.TabIndex = 1;
@@ -289,7 +301,7 @@ namespace Klikacz
             // 
             // keyTB
             // 
-            keyTB.Location = new Point(6, 48);
+            keyTB.Location = new Point(6, 51);
             keyTB.Name = "keyTB";
             keyTB.Size = new Size(93, 23);
             keyTB.TabIndex = 0;
@@ -297,7 +309,7 @@ namespace Klikacz
             // 
             // keyAddButton
             // 
-            keyAddButton.Location = new Point(116, 176);
+            keyAddButton.Location = new Point(116, 206);
             keyAddButton.Name = "keyAddButton";
             keyAddButton.Size = new Size(105, 23);
             keyAddButton.TabIndex = 19;
@@ -305,34 +317,106 @@ namespace Klikacz
             keyAddButton.UseVisualStyleBackColor = true;
             keyAddButton.Click += keyAddButton_Click;
             // 
+            // deleteSelectedButton
+            // 
+            deleteSelectedButton.Location = new Point(12, 235);
+            deleteSelectedButton.Name = "deleteSelectedButton";
+            deleteSelectedButton.Size = new Size(98, 23);
+            deleteSelectedButton.TabIndex = 20;
+            deleteSelectedButton.Text = "Usuń wybrane";
+            deleteSelectedButton.UseVisualStyleBackColor = true;
+            deleteSelectedButton.Click += deleteSelectedButton_Click;
+            // 
+            // loopCountTB
+            // 
+            loopCountTB.Location = new Point(116, 56);
+            loopCountTB.Name = "loopCountTB";
+            loopCountTB.Size = new Size(105, 23);
+            loopCountTB.TabIndex = 21;
+            loopCountTB.KeyPress += loopCountTB_KeyPress;
+            // 
+            // loopCountL
+            // 
+            loopCountL.AutoSize = true;
+            loopCountL.Location = new Point(32, 59);
+            loopCountL.Name = "loopCountL";
+            loopCountL.Size = new Size(78, 15);
+            loopCountL.TabIndex = 22;
+            loopCountL.Text = "Ilość zapętleń";
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { zapiszToolStripMenuItem, wczytajToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(484, 24);
+            menuStrip1.TabIndex = 23;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // zapiszToolStripMenuItem
+            // 
+            zapiszToolStripMenuItem.Name = "zapiszToolStripMenuItem";
+            zapiszToolStripMenuItem.Size = new Size(121, 20);
+            zapiszToolStripMenuItem.Text = "Zapisz konfigurację";
+            zapiszToolStripMenuItem.Click += zapiszToolStripMenuItem_Click;
+            // 
+            // wczytajToolStripMenuItem
+            // 
+            wczytajToolStripMenuItem.Name = "wczytajToolStripMenuItem";
+            wczytajToolStripMenuItem.Size = new Size(129, 20);
+            wczytajToolStripMenuItem.Text = "Wczytaj konfigurację";
+            wczytajToolStripMenuItem.Click += wczytajToolStripMenuItem_Click;
+            // 
+            // legendL
+            // 
+            legendL.AutoSize = true;
+            legendL.Location = new Point(12, 345);
+            legendL.Name = "legendL";
+            legendL.Size = new Size(55, 15);
+            legendL.TabIndex = 24;
+            legendL.Text = "Legenda:";
+            // 
             // Klikacz
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ClientSize = new Size(484, 461);
+            Controls.Add(legendL);
+            Controls.Add(isWorkingL);
+            Controls.Add(loopNumberL);
+            Controls.Add(loopNumberLL);
+            Controls.Add(loopCountL);
+            Controls.Add(yPositionL);
+            Controls.Add(loopCountTB);
+            Controls.Add(yPosition);
+            Controls.Add(deleteSelectedButton);
+            Controls.Add(xPositionL);
+            Controls.Add(xPosition);
             Controls.Add(keyAddButton);
             Controls.Add(addKeyGB);
             Controls.Add(addCordGB);
             Controls.Add(richTextBox1);
             Controls.Add(CordClearButton);
-            Controls.Add(groupBox1);
             Controls.Add(CordAddButton);
             Controls.Add(CoordsLV);
             Controls.Add(endB);
             Controls.Add(startB);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
             MaximizeBox = false;
             Name = "Klikacz";
             Text = "Klikacz";
             KeyDown += Klikacz_KeyDown;
             MouseDown += Klikacz_MouseDown;
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
             addCordGB.ResumeLayout(false);
             addCordGB.PerformLayout();
             addKeyGB.ResumeLayout(false);
             addKeyGB.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
 
@@ -356,7 +440,6 @@ namespace Klikacz
         private Label yCordAddLabel;
         private Label msCordAddLabel;
         private Button CordAddButton;
-        private GroupBox groupBox1;
         private RichTextBox richTextBox1;
         private Button CordClearButton;
         private Label isWorkingL;
@@ -366,5 +449,14 @@ namespace Klikacz
         private TextBox keyTB;
         private Label keyL;
         private Button keyAddButton;
+        private Button deleteSelectedButton;
+        private TextBox loopCountTB;
+        private Label loopCountL;
+        private Label loopNumberL;
+        private Label loopNumberLL;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem zapiszToolStripMenuItem;
+        private ToolStripMenuItem wczytajToolStripMenuItem;
+        private Label legendL;
     }
 }
